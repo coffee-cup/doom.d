@@ -67,13 +67,15 @@
 ;; Buffers
 
 (map! :leader
-      :desc "Prev" "TAB" 'previous-buffer)
+      :desc "Prev" "TAB" 'previous-buffer
+      :desc "Switch buffers" "b b" 'ivy-switch-buffer)
 
 ;; Windows
 
 (map! :leader
       :desc "Split horizontally" "w /" 'split-window-horizontally
-      :desc "Split vertically" "w -" 'split-window-horizontally)
+      :desc "Split vertically" "w -" 'split-window-horizontally
+      :desc "Center" "m" 'recenter)
 
 (defun size-callback ()
   (cond ((> (frame-pixel-width) 1280) '(90 . 0.6))
@@ -135,7 +137,6 @@
 
 ;; Prettier
 
-
 (use-package! prettier-js
   :commands (prettier-js-mode)
   :init
@@ -144,10 +145,45 @@
     (interactive)
     (prettier-js-mode))
 
-  (add-hook! (typescript-mode js2-mode)
+  (add-hook! (typescript-mode js2-mode web-mode)
              (prettier-js-mode)))
 
 ;; TypeScript
 
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-mode)
+  (tide-setup)
+  (flycheck-mode +1)
+  (company-mode +1)
+  (tide-hl-identifier-mode +1)
+  (tide-restart-server))
+
 (after! typescript-mode
   (setq typescript-indent-level 2))
+
+(use-package! tide
+  :after (typescript-mode)
+  :hook ((typescript-mode . setup-tide-mode)
+         (typescript-mode . tide-hl-identifier-mode)))
+
+(after! web-mode
+  (setq web-mode-code-indent-offset 2))
+
+(map! :map (typescript-mode-map web-mode-map)
+      "C-c r" 'tide-rename-symbol
+      "C-c o" 'tide-organize-imports
+      "C-c l" 'setup-tide-mode)
+
+;; Emmet
+
+(after! emmet-mode
+  (map! :i "C-p" 'emmet-expand-line))
+
+;; Drag stuff
+
+(define-key!
+  "M-j" 'drag-stuff-down
+  "M-p" 'drag-stuff-up)
