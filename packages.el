@@ -52,5 +52,5 @@
 ;(package! builtin-package :recipe (:branch "develop"))
 
 (package! wakatime-mode)
-
 (package! zoom)
+(package! prettier-js)

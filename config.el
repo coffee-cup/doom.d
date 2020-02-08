@@ -132,3 +132,22 @@
   :config
   (setq wakatime-api-key "f175432d-53db-4495-9ef3-a518b67d4c1a")
   (global-wakatime-mode))
+
+;; Prettier
+
+
+(use-package! prettier-js
+  :commands (prettier-js-mode)
+  :init
+  (defun setup-prettier-js ()
+    "Sets up prettier js formatting."
+    (interactive)
+    (prettier-js-mode))
+
+  (add-hook! (typescript-mode js2-mode)
+             (prettier-js-mode)))
+
+;; TypeScript
+
+(after! typescript-mode
+  (setq typescript-indent-level 2))
