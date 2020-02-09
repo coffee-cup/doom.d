@@ -66,8 +66,12 @@
 
 ;; Buffers
 
+(defun switch-to-previous-buffer ()
+  (interactive)
+  (switch-to-buffer (other-buffer)))
+
 (map! :leader
-      :desc "Prev" "TAB" 'previous-buffer
+      :desc "Prev" "TAB" 'switch-to-previous-buffer
       :desc "Switch buffers" "b b" 'ivy-switch-buffer)
 
 ;; Windows
@@ -191,3 +195,9 @@
 ;; Evil
 
 (setq evil-escape-delay 0.1)
+
+;; Errors
+
+(map! :leader
+      :desc "Prev error" "e p" 'previous-error
+      :desc "Next error" "e n" 'next-error)
