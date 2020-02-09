@@ -187,3 +187,7 @@
 (define-key!
   "M-j" 'drag-stuff-down
   "M-p" 'drag-stuff-up)
+
+;; Evil
+
+(setq evil-escape-delay 0.1)
