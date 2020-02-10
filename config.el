@@ -82,7 +82,7 @@
 
 (map! :leader
       :desc "Split horizontally" "w /" 'split-window-horizontally
-      :desc "Split vertically" "w -" 'split-window-horizontally
+      :desc "Split vertically" "w -" 'split-window-vertically
       :desc "Center" "m" 'recenter)
 
 (defun size-callback ()
