@@ -114,18 +114,23 @@
   :config
   (setq ivy-re-builders-alist
         '((swiper . ivy--regex-plus)
-        (t        . ivy--regex-fuzzy))))
+          (t        . ivy--regex-fuzzy))
+        ivy-initial-inputs-alist nil
+        ivy-display-style 'fancy
+        ivy-use-virtual-buffers t))
 
-(define-key!
+(map!
   "C-s" 'swiper
-  "M-x" 'counsel-M-x)
+  "M-x" 'counsel-M-x
 
-(map! :leader
-      :desc "M-x" "SPC" 'counsel-M-x
-      :desc "list projects" "p l" 'counsel-projectile-switch-project)
+  (:map (ivy-minibuffer-map minibuffer-local-map)
+    "C-k" 'kill-line
+    "RET" 'ivy-alt-done)
 
-(map! :map ivy-minibuffer-map
-      "C-k" 'kill-line)
+  (:leader
+    :desc "M-x" "SPC" 'counsel-M-x
+    :desc "List projects" "p l" 'counsel-projectile-switch-project
+    :desc "Search project" "p g" 'counsel-git-grep))
 
 ;; Magit
 
@@ -174,7 +179,10 @@
          (typescript-mode . tide-hl-identifier-mode)))
 
 (after! web-mode
-  (setq web-mode-code-indent-offset 2))
+  (setq web-mode-code-indent-offset 2
+        web-mode-attr-indent-offset 2
+        web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2))
 
 (map! :map (typescript-mode-map web-mode-map)
       "C-c r" 'tide-rename-symbol
