@@ -30,6 +30,10 @@
   (setq doom-modeline-height 35
         doom-modeline-icon t))
 
+(setq evil-normal-state-cursor '(box "hot pink")
+      evil-insert-state-cursor '(bar "hot pink")
+      evil-visual-state-cursor '(hollow "hot pink"))
+
 ;; If you intend to use org, it is recommended you change this!
 (setq org-directory "~/Dropbox/org/")
 
