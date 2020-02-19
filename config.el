@@ -3,7 +3,6 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; refresh' after modifying this file!
 
-
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Jake Runzer"
@@ -83,6 +82,7 @@
 (map! :leader
       :desc "Split horizontally" "w /" 'split-window-horizontally
       :desc "Split vertically" "w -" 'split-window-vertically
+      :desc "Swap" "w s" 'ace-swap-window
       :desc "Center" "m" 'recenter)
 
 (defun size-callback ()
@@ -118,14 +118,18 @@
   :config
   (setq ivy-re-builders-alist
         '((swiper . ivy--regex-plus)
-          (t        . ivy--regex-fuzzy))
+          (counsel-git-grep . ivy--regex-plus)
+          (counsel-ag)
+          (t      . ivy--regex-fuzzy))
         ivy-initial-inputs-alist nil
         ivy-display-style 'fancy
         ivy-use-virtual-buffers t))
 
 (map!
-  "C-s" 'swiper
-  "M-x" 'counsel-M-x
+  "C-s"  'swiper
+  "M-x"  'counsel-M-x
+  :n "/" 'evil-search-forward
+  :n "n" 'evil-search-next
 
   (:map (ivy-minibuffer-map minibuffer-local-map)
     "C-k" 'kill-line
@@ -135,6 +139,10 @@
     :desc "M-x" "SPC" 'counsel-M-x
     :desc "List projects" "p l" 'counsel-projectile-switch-project
     :desc "Search project" "p g" 'counsel-git-grep))
+
+;; Avy
+
+(map! "C-c c" 'avy-goto-word-1)
 
 ;; Magit
 
@@ -202,14 +210,42 @@
 
 (define-key!
   "M-j" 'drag-stuff-down
+  "M-n" 'drag-stuff-down
   "M-p" 'drag-stuff-up)
 
 ;; Evil
 
-(setq evil-escape-delay 0.1)
+(setq evil-escape-delay 0.2)
 
 ;; Errors
 
 (map! :leader
-      :desc "Prev error" "e p" 'previous-error
-      :desc "Next error" "e n" 'next-error)
+      (:prefix-map ("e" . "errors")
+        :desc "Prev error" "p" 'previous-error
+        :desc "Next error" "n" 'next-error))
+
+
+;; Dired
+
+(after! dired
+  (add-hook! (dired-mode)
+             dired-hide-details-mode))
+
+(use-package! dired-subtree
+  :after dired)
+
+(map! :map dired-mode-map
+      :n "DEL" 'dired-up-directory
+      :n "<tab>" 'dired-subtree-toggle
+      :n "<backtab>" 'dired-subtree-cycle)
+
+;; Spelling
+
+(map! :map flyspell-mode-map
+      :desc "Correct wor" "C-c s" 'flyspell-correct-word-before-point)
+
+;; Kill ring
+
+(map! :leader
+      (:prefix-map ("k" . "kill ring")
+        :desc "kill ring" "k r" 'counsel-yank-pop))

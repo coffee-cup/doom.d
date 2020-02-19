@@ -54,3 +54,4 @@
 (package! wakatime-mode)
 (package! zoom)
 (package! prettier-js)
+(package! dired-subtree)
